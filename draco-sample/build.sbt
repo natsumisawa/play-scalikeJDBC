@@ -16,7 +16,8 @@ libraryDependencies ++= Seq(
   "org.scalikejdbc" %% "scalikejdbc-config" % "3.0.0", // Connectionのセットアップを簡単にする
   "org.scalikejdbc"   %% "scalikejdbc-test" % "3.2.+"   % "test",
   "org.scalatest"     %% "scalatest"        % "3.0.+"   % "test",
-  "org.specs2"        %% "specs2-core"      % "3.8.9"   % "test"
+  "org.specs2"        %% "specs2-core"      % "3.8.9"   % "test",
+  "org.scalikejdbc" %% "scalikejdbc-syntax-support-macro" % "3.3.2"
 )
 
 // Adds additional packages into Twirl

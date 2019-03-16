@@ -17,9 +17,8 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
     // Load `application.conf` and setup.
     DBs.setupAll()
 
-    /**
-      * DB: 新しいコネクションを自動的に取得する
-      */
+    // DB: auto get new connection
+    // autoCommit: every operation will be executed
     DB autoCommit {implicit session =>
       sql"""
         create table applications (
@@ -28,22 +27,24 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
           created_at timestamp not null
         )
       """.execute.apply()
-    }
-    // この時点ではコネクションは既に close されている
+    } // already connection close
 
-    /**
-      * localTx: トランザクションブロック
-      */
     DB localTx { implicit session =>
-      // --- トランザクション開始 ---
+      // --- tx start ---
       val (app, int) = (Application.column, Interview.column)
       withSQL {
         insert.into(Application).columns(app.name, app.createdAt)
           .values("Alice", LocalDateTime.now())
       }.update.apply()
-      // --- トランザクション終了 ---
-    } // 途中で例外が throw されたらロールバック
+      // --- tx end ---
+    } // if throw exception => rollback
 
-    Ok(views.html.index("hello"))
+    val name = DB autoCommit { implicit session =>
+      sql"select name from applications".map { app =>
+        app.string("name")
+      }.list.apply()
+    }
+
+    Ok(views.html.index(name.toString))
   }
 }

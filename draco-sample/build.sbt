@@ -7,8 +7,14 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
 scalaVersion := "2.12.8"
 
-libraryDependencies += guice
-libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "4.0.1" % Test
+libraryDependencies ++= Seq(
+  guice,
+  "org.scalatestplus.play" %% "scalatestplus-play" % "4.0.1" % Test,
+  "org.scalikejdbc" %% "scalikejdbc"       % "3.3.2",
+  "com.h2database"  %  "h2"                % "1.4.197",
+  "ch.qos.logback"  %  "logback-classic"   % "1.2.3",
+  "org.scalikejdbc" %% "scalikejdbc-config" % "3.0.0" // Connectionのセットアップを簡単にする
+)
 
 // Adds additional packages into Twirl
 //TwirlKeys.templateImports += "com.example.controllers._"

@@ -1,12 +1,12 @@
 package controllers
 
 import javax.inject._
+import java.time.LocalDateTime
 import play.api._
 import play.api.mvc._
-import java.time.LocalDateTime
-import models.{ Application, Interview }
 import scalikejdbc._
 import scalikejdbc.config._
+import models.{ Application, Interview }
 
 @Singleton
 class HomeController @Inject()(cc: ControllerComponents) extends AbstractController(cc) {
@@ -30,15 +30,6 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
   }
 
   def insertName(name: String) = Action { implicit request: Request[AnyContent] =>
-    DB localTx { implicit session =>
-      // --- tx start ---
-      val (app, int) = (Application.column, Interview.column)
-      withSQL {
-        insert.into(Application).columns(app.name, app.createdAt)
-          .values(name, LocalDateTime.now())
-      }.update.apply()
-      // --- tx end ---
-    } // if throw exception => rollback
     Ok(views.html.index("maybe success insert"))
   }
 

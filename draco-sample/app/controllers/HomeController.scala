@@ -12,13 +12,15 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
   DBs.setupAll()
 
   def addApplication(name: String) = Action { implicit request: Request[AnyContent] =>
-    ApplicationDao.add(name)
-    Ok(views.html.index("sucess!!"))
+    val kariName = s"${scala.util.Random.alphanumeric.take(4).mkString}さん"
+    ApplicationDao.add(kariName)
+    val apps = ApplicationDao.list
+    Ok(views.html.applicationList(apps))
   }
 
   def applications = Action { implicit request: Request[AnyContent] =>
     val apps = ApplicationDao.list
-    Ok(views.html.index(apps.toString))
+    Ok(views.html.applicationList(apps))
   }
 
   def addInterview(applciationId: Long) = Action { implicit req =>

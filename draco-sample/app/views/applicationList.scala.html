@@ -1,0 +1,14 @@
+@(applications: List[Application])
+
+@main("applications") {
+<div>
+    <a href="@routes.HomeController.addApplication("name")" class="btn btn-success" role="button">+ add application</a>
+</div>
+<h1>applications</h1>
+    <ul>
+    @applications.map { app =>
+        <li>@app.id @app.applicationName</li>
+        <a href="@routes.HomeController.interviews(app.id)" class="btn btn-success" role="button">show interviews</a>
+    }
+    </ul>
+}

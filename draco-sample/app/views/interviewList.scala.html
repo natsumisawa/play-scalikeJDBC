@@ -1,0 +1,13 @@
+@(interviews: List[(String, Long)])
+
+@main("interviews") {
+    <div>
+        <a href="@routes.HomeController.addInterview(1)" class="btn btn-success" role="button">+ add application</a>
+    </div>
+    <h1>interviews of @interviews.head._1</h1>
+    <ul>
+    @interviews.map { int =>
+        <li>@int._2</li>
+    }
+    </ul>
+}

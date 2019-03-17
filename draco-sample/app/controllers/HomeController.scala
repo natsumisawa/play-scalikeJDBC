@@ -30,7 +30,9 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
 
   def interviews(applicationId: Long) = Action { implicit req =>
     val result = InterviewDao.findBy(applicationId)
-    val msg = result.map(r => s"name: ${r._1} intId: ${r._2}")
-    Ok(views.html.index(msg.toString))
+    result match {
+      case Nil => Ok(views.html.index("nothing interviews"))
+      case _ => Ok(views.html.interviewList(result))
+    }
   }
 }

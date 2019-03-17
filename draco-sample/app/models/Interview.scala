@@ -51,13 +51,15 @@ object InterviewDao {
     }
   }
 
-  def findBy(applicationId: Long): List[Interview] = {
+  def findBy(applicationId: Long): List[(String, Long)] = {
     DB localTx { implicit session =>
       withSQL {
-        select.from(Interview as int)
-          .innerJoin(Application as app).on(int.applicationId, app.id)
-          .where.eq(int.applicationId, applicationId)
-      }.map(Interview(int.resultName)).list.apply()
+        select.from(Application as app)
+          .innerJoin(Interview as int).on(app.id, int.applicationId)
+          .where.eq(app.id, applicationId)
+      }.map(rs => {
+        (rs.string(app.resultName.applicationName), rs.long(int.resultName.id))
+      }).list.apply()
     }
   }
 }

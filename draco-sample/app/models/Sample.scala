@@ -11,26 +11,14 @@ case class Application(id: Long, name: String, createdAt: LocalDateTime)
 object Application extends SQLSyntaxSupport[Application] {
   override val schemaName: Option[String] = None
   override val tableName: String = "applications"
-  override val columns = Seq("id", "name", "created_at")
+  override val columns = Seq("ID", "name", "created_at")
 
   def apply(app: ResultName[Application])(rs: WrappedResultSet): Application = {
     autoConstruct(rs, app)
   }
 }
 
-object ApplicationDao extends SQLSyntaxSupport[Application] {
-
-  // DB: auto get new connection
-  // autoCommit: every operation will be executed
-  DB autoCommit { implicit session =>
-    sql"""
-          create table applications (
-            id serial not null primary key,
-            name nvarchar(64) not null,
-            created_at timestamp not null
-          )
-        """.execute.apply()
-  } // already connection close
+object ApplicationDao {
 
   def insertName(name: String): Unit = {
     DB localTx { implicit session =>
@@ -44,10 +32,20 @@ object ApplicationDao extends SQLSyntaxSupport[Application] {
     } // if throw exception => rollback
   }
 
-  def count: Int = DB autoCommit { implicit session =>
-    sql"select name from applications".map { app =>
-      app.string("name")
-    }.list.apply().length
+  def count: Int = {
+    DB autoCommit { implicit session =>
+      sql"select name from applications".map { app =>
+        app.string("name")
+      }.list.apply().length
+    }
+  }
+
+  def findBy(name: String): List[String] = {
+    DB localTx { implicit session =>
+      sql"select name from applications".map { app =>
+        app.string("name")
+      }.list.apply()
+    }
   }
 }
 

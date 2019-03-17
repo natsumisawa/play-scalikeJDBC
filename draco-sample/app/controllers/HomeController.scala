@@ -1,12 +1,10 @@
 package controllers
 
 import javax.inject._
-import java.time.LocalDateTime
-import play.api._
 import play.api.mvc._
 import scalikejdbc._
 import scalikejdbc.config._
-import models.{ Application, Interview, ApplicationDao }
+import models.ApplicationDao
 
 @Singleton
 class HomeController @Inject()(cc: ControllerComponents) extends AbstractController(cc) {
@@ -19,13 +17,22 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
     Ok(views.html.index("maybe success insert"))
   }
 
-  def select(name: String) = Action { implicit request: Request[AnyContent] =>
-//    val app = Application.column
-//    DB localTx { implicit session =>
-//      val result = withSQL {
-//        select.from(Application as app)
-//      }.map(Application(app.name)).list.apply()
-//    }
-    Ok(views.html.index("id"))
+  def findBy(name: String) = Action { implicit request: Request[AnyContent] =>
+    val id = ApplicationDao.findBy(name)
+    Ok(views.html.index(s"id: {$id.toString}"))
+  }
+
+  private def createTable: Unit = {
+    // DB: auto get new connection
+    // autoCommit: every operation will be executed
+    DB autoCommit { implicit session =>
+      sql"""
+          create table applications (
+            id serial not null primary key,
+            name nvarchar(64) not null,
+            created_at timestamp not null
+          )
+        """.execute.apply()
+    } // already connection close
   }
 }

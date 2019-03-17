@@ -11,7 +11,7 @@ class InterviewSpec extends FlatSpec with Matchers with AutoRollback {
 
   DBs.setupAll()
 
-  behavior of "insert"
+  behavior of "add interview"
 
   it should "insert to interviews" in { implicit session =>
     ApplicationDao.add("test1")
@@ -19,19 +19,26 @@ class InterviewSpec extends FlatSpec with Matchers with AutoRollback {
     InterviewDao.count should equal (1)
   }
 
+  it should "if application_id not exist, not insert" in { implicit session =>
+    val appId = 100
+    InterviewDao.add(appId)
+    InterviewDao.findBy(appId).length should equal (0)
+  }
+
   behavior of "find"
 
   it should "if an application has 1 interview, find 1 interview by application_id" in { implicit session =>
+    val appId = 2
     ApplicationDao.add("test2")
-    InterviewDao.add(2)
-    println(InterviewDao.findBy(2))
-    InterviewDao.findBy(2).length should equal (1)
+    InterviewDao.add(appId)
+    InterviewDao.findBy(appId).length should equal (1)
   }
 
   it should "if an application has 2 interviews, find 2 interviews by application_id" in { implicit session =>
+    val appId = 3
     ApplicationDao.add("test3")
-    InterviewDao.add(3)
-    InterviewDao.add(3)
-    InterviewDao.findBy(3).length should equal (2)
+    InterviewDao.add(appId)
+    InterviewDao.add(appId)
+    InterviewDao.findBy(appId).length should equal (2)
   }
 }

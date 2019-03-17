@@ -20,7 +20,7 @@ object Application extends SQLSyntaxSupport[Application] {
 
 object ApplicationDao {
 
-  val app = Application.syntax("app")
+  val (app, int) = (Application.syntax("app"), Interview.syntax("int"))
 
   def add(name: String): Unit = {
     DB localTx { implicit session =>
@@ -46,6 +46,15 @@ object ApplicationDao {
     DB localTx { implicit session =>
       withSQL {
         select.from(Application as app)
+      }.map(Application(app.resultName)).list.apply()
+    }
+  }
+
+  def find(applicationId: Long): List[Application] = {
+    DB localTx { implicit session =>
+      withSQL {
+        select.from(Application as app)
+          .where.eq(app.id, applicationId)
       }.map(Application(app.resultName)).list.apply()
     }
   }

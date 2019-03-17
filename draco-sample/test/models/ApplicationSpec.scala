@@ -9,9 +9,9 @@ class ApplicationSpec extends FlatSpec with Matchers with AutoRollback {
 
   DBs.setupAll()
 
-  behavior of "insert"
+  behavior of "add"
 
-  it should "insert name to applications" in { implicit session =>
+  it should "insert application" in { implicit session =>
     ApplicationDao.add("name")
     ApplicationDao.count should equal (1)
   }

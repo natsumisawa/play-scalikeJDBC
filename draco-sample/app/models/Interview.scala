@@ -30,12 +30,16 @@ object InterviewDao {
   }
 
   def add(applicationId: Long): Unit = {
-    val int = Interview.column
-    DB localTx { implicit session =>
-      withSQL {
-        insert.into(Interview).columns(int.applicationId, int.createdAt)
-          .values(applicationId, LocalDateTime.now())
-      }.update.apply()
+    ApplicationDao.find(applicationId) match {
+      case Nil => ()
+      case _ =>
+        val int = Interview.column
+        DB localTx { implicit session =>
+          withSQL {
+            insert.into(Interview).columns(int.applicationId, int.createdAt)
+              .values(applicationId, LocalDateTime.now())
+          }.update.apply()
+      }
     }
   }
 

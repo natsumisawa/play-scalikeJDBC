@@ -11,7 +11,7 @@ class InterviewSpec extends FlatSpec with Matchers with AutoRollback {
 
   DBs.setupAll()
 
-  behavior of "add interview"
+  behavior of ">add"
 
   it should "insert to interviews" in { implicit session =>
     ApplicationDao.add("test1")
@@ -25,7 +25,7 @@ class InterviewSpec extends FlatSpec with Matchers with AutoRollback {
     InterviewDao.findBy(appId).length should equal (0)
   }
 
-  behavior of "find"
+  behavior of ">find"
 
   it should "if an application has 1 interview, find 1 interview by application_id" in { implicit session =>
     val appId = 2

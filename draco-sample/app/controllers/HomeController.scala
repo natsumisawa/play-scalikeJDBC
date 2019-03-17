@@ -18,7 +18,8 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
   }
 
   def applications = Action { implicit request: Request[AnyContent] =>
-    val id = ApplicationDao.findBy
-    Ok(views.html.index(s"id: {$id.toString}"))
+    val apps = ApplicationDao.getApplications
+    apps.map(a => println(a.name))
+    Ok(views.html.index(s"id: {$apps.toString}"))
   }
 }

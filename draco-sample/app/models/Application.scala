@@ -1,8 +1,8 @@
 package models
 
-import scalikejdbc._
 import java.time.LocalDateTime
-import sqls.count
+import scalikejdbc._
+import scalikejdbc.config._
 
 case class Application(id: Long, name: String, createdAt: LocalDateTime)
 
@@ -20,10 +20,12 @@ object Application extends SQLSyntaxSupport[Application] {
 
 object ApplicationDao {
 
+  val app = Application.syntax("app")
+
   def insertName(name: String): Unit = {
     DB localTx { implicit session =>
       // --- tx start ---
-      val (app, int) = (Application.column, Interview.column)
+      val app = Application.column
       withSQL {
         insert.into(Application).columns(app.name, app.createdAt)
           .values(name, LocalDateTime.now())
@@ -32,19 +34,19 @@ object ApplicationDao {
     } // if throw exception => rollback
   }
 
-  def count: Int = {
-    DB autoCommit { implicit session =>
-      sql"select name from applications".map { app =>
-        app.string("name")
-      }.list.apply().length
+  def count: Option[Long] = {
+    DB localTx { implicit session =>
+      withSQL {
+        select.from(Application as app)
+      }.map(_.long(1)).single.apply()
     }
   }
 
-  def findBy: List[String] = {
+  def getApplications: List[Application] = {
     DB localTx { implicit session =>
-      sql"select name from applications".map { app =>
-        app.string("name")
-      }.list.apply()
+      withSQL {
+        select.from(Application as app)
+      }.map(Application(app.resultName)).list.apply()
     }
   }
 }

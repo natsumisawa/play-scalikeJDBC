@@ -1,18 +1,16 @@
-package controllers
+package models
 
+import org.scalatest._
 import org.scalatest.fixture.FlatSpec
 import scalikejdbc.scalatest.AutoRollback
 import scalikejdbc.config._
-import org.scalatest._
-import models.ApplicationDao
-
 /**
  * Add your spec here.
  * You can mock out a whole application including requests, plugins etc.
  *
  * For more information, see https://www.playframework.com/documentation/latest/ScalaTestingWithScalaTest
  */
-class HomeControllerSpec extends FlatSpec with Matchers with AutoRollback {
+class ApplicationSpec extends FlatSpec with Matchers with AutoRollback {
 
   DBs.setupAll()
 

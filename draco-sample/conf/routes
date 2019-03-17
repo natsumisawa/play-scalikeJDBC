@@ -4,8 +4,10 @@
 # ~~~~
 
 # An example controller showing a sample home page
-GET     /add/:name                        controllers.HomeController.add(name: String)
+GET     /applications/add/:name           controllers.HomeController.addApplication(name: String)
 GET     /applications                     controllers.HomeController.applications
+GET     /interviews/add/:applciationId    controllers.HomeController.addInterview(applciationId: Long)
+GET     /interviews/:applicationId        controllers.HomeController.interviews(applicationId: Long)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file                     controllers.Assets.versioned(path="/public", file: Asset)

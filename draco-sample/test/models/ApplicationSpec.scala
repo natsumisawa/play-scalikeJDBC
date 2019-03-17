@@ -12,7 +12,7 @@ class ApplicationSpec extends FlatSpec with Matchers with AutoRollback {
   behavior of "insert"
 
   it should "insert name to applications" in { implicit session =>
-    ApplicationDao.insertName("name")
-    ApplicationDao.count should equal (Some(1))
+    ApplicationDao.add("name")
+    ApplicationDao.count should equal (1)
   }
 }

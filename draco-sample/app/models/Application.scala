@@ -22,7 +22,7 @@ object ApplicationDao {
 
   val app = Application.syntax("app")
 
-  def insertName(name: String): Unit = {
+  def add(name: String): Unit = {
     DB localTx { implicit session =>
       // --- tx start ---
       val app = Application.column
@@ -34,15 +34,15 @@ object ApplicationDao {
     } // if throw exception => rollback
   }
 
-  def count: Option[Long] = {
+  def count: Int = {
     DB localTx { implicit session =>
       withSQL {
         select.from(Application as app)
-      }.map(_.long(1)).single.apply()
+      }.map(_.long(1)).list.apply().length
     }
   }
 
-  def getApplications: List[Application] = {
+  def list: List[Application] = {
     DB localTx { implicit session =>
       withSQL {
         select.from(Application as app)

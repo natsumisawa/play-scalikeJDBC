@@ -19,12 +19,40 @@ object Interview extends SQLSyntaxSupport[Interview] {
 
 object InterviewDao {
 
-  val int = Interview.syntax("int")
+  val (int, app) = (Interview.syntax("int"), Application.syntax("app"))
 
-  def getInterviews: List[Interview] = {
+  def list: List[Interview] = {
     DB localTx { implicit session =>
       withSQL {
         select.from(Interview as int)
+      }.map(Interview(int.resultName)).list.apply()
+    }
+  }
+
+  def add(applicationId: Long): Unit = {
+    val int = Interview.column
+    DB localTx { implicit session =>
+      withSQL {
+        insert.into(Interview).columns(int.applicationId, int.createdAt)
+          .values(applicationId, LocalDateTime.now())
+      }.update.apply()
+    }
+  }
+
+  def count: Int = {
+    DB localTx { implicit session =>
+      withSQL {
+        select.from(Interview as int)
+      }.map(_.long(1)).list.apply().length
+    }
+  }
+
+  def findBy(applicationId: Long): List[Interview] = {
+    DB localTx { implicit session =>
+      withSQL {
+        select.from(Interview as int)
+          .innerJoin(Application as app).on(int.applicationId, app.id)
+          .where.eq(int.applicationId, applicationId)
       }.map(Interview(int.resultName)).list.apply()
     }
   }

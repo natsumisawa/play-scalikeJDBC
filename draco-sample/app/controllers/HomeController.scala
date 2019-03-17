@@ -2,9 +2,8 @@ package controllers
 
 import javax.inject._
 import play.api.mvc._
-import scalikejdbc._
 import scalikejdbc.config._
-import models.ApplicationDao
+import models.{ApplicationDao, InterviewDao}
 
 @Singleton
 class HomeController @Inject()(cc: ControllerComponents) extends AbstractController(cc) {
@@ -19,7 +18,8 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
 
   def applications = Action { implicit request: Request[AnyContent] =>
     val apps = ApplicationDao.getApplications
-    apps.map(a => println(a.name))
+    apps.map(a => println(a.applicationName))
+    println(InterviewDao.getInterviews)
     Ok(views.html.index(s"id: {$apps.toString}"))
   }
 }

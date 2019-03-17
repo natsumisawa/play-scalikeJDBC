@@ -40,7 +40,7 @@ object ApplicationDao {
     }
   }
 
-  def findBy(name: String): List[String] = {
+  def findBy: List[String] = {
     DB localTx { implicit session =>
       sql"select name from applications".map { app =>
         app.string("name")

@@ -17,22 +17,8 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
     Ok(views.html.index("maybe success insert"))
   }
 
-  def findBy(name: String) = Action { implicit request: Request[AnyContent] =>
-    val id = ApplicationDao.findBy(name)
+  def applications = Action { implicit request: Request[AnyContent] =>
+    val id = ApplicationDao.findBy
     Ok(views.html.index(s"id: {$id.toString}"))
-  }
-
-  private def createTable: Unit = {
-    // DB: auto get new connection
-    // autoCommit: every operation will be executed
-    DB autoCommit { implicit session =>
-      sql"""
-          create table applications (
-            id serial not null primary key,
-            name nvarchar(64) not null,
-            created_at timestamp not null
-          )
-        """.execute.apply()
-    } // already connection close
   }
 }

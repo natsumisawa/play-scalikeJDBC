@@ -9,6 +9,7 @@ scalaVersion := "2.12.8"
 
 libraryDependencies ++= Seq(
   guice,
+  ws,
   "org.scalatestplus.play" %% "scalatestplus-play" % "4.0.1" % Test,
   "org.scalikejdbc" %% "scalikejdbc" % "3.3.2",
   "com.h2database" % "h2" % "1.4.197",
@@ -17,7 +18,8 @@ libraryDependencies ++= Seq(
   "org.scalikejdbc" %% "scalikejdbc-test" % "3.2.+" % "test",
   "org.scalatest" %% "scalatest" % "3.0.+" % "test",
   "org.specs2" %% "specs2-core" % "3.8.9" % "test",
-  "org.scalikejdbc" %% "scalikejdbc-syntax-support-macro" % "3.3.2"
+  "org.scalikejdbc" %% "scalikejdbc-syntax-support-macro" % "3.3.2",
+  "com.pauldijou" %% "jwt-core" % "2.1.0"
 )
 
 // Adds additional packages into Twirl
